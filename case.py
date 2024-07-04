@@ -48,12 +48,41 @@ def comparar(territorios, grafico):
         print(f'{territorio[0]}: {territorio[1]}km2', end=' | ')
     print(f'Diferença: {territorios[0][1] - territorios[1][1]}km2 | Grafico: {grafico}')
     mostrar(territorios, grafico)
-    
+
+
+# trata territorios com nomes com espaço como 'rio de janeiro' e 'distrito federal'
+def separar_argumentos(lista, numero):
+    retorno = []
+    while numero > 0:
+        if lista[0].isnumeric():
+            retorno.append(lista[0])
+            lista = lista[1:]
+            numero -= 1
+        else:
+            identificador, contador = lista[0], 1
+            while contador < len(lista) and identificador not in nome2id:
+                identificador = identificador + ' ' + lista[contador]
+                contador += 1
+            if(identificador in nome2id):
+                retorno.append(identificador)
+                lista = lista[contador:]
+                numero -= 1
+            else:
+                print('territorio nao reconhecido')
+                return None
+    return retorno
+
+
 def ler_entrada():
     entrada = input()
     if entrada == 'sair': 
         return [entrada] 
-    return entrada.split()
+    
+    entrada = entrada.split()
+    argumentos = 2 if entrada[0] == 'comparar' else 1
+    comando = entrada[:1] + separar_argumentos(entrada[1:-1], argumentos) + entrada[-1:]
+        
+    return comando
     
 
 if __name__ == '__main__':
